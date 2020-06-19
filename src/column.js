@@ -13,10 +13,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
 const Title = styled.h3`
   padding: 8px;
 `;
-const TaskList = styled.div`
+const ItemList = styled.div`
   padding: 8px;
   background-color: ${props => (props.isDragginOver ? "lightgrey" : "inherit")};
   flex-grow: 1;
@@ -37,14 +38,14 @@ const Column = props => {
           <Title {...provided.dragHandleProps}>{props.column.title}</Title>
           <Droppable droppableId={props.column.id} type="task">
             {provided => (
-              <TaskList
+              <ItemList
                 ref={provided.innerRef}
                 {...provided.droppableProps}
                 // isDragginOver={snapshot.isDraggingOver}
               >
                 <InnerList tasks={props.tasks} />
                 {provided.placeholder}
-              </TaskList>
+              </ItemList>
             )}
           </Droppable>
         </Container>
