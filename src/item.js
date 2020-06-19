@@ -17,9 +17,9 @@ const Container = styled.div`
 //   border-radius: 4px;
 // `;
 
-const Task = props => {
+const Item = props => {
   return (
-    <Draggable draggableId={props.task.id} index={props.index}>
+    <Draggable draggableId={props.item.id} index={props.index}>
       {(provided, snapshot) => (
         <Container
           {...provided.draggableProps}
@@ -28,11 +28,11 @@ const Task = props => {
           isDragging={snapshot.isDragging}
         >
           {/* <Handle {...provided.dragHandleProps} /> */}
-          {props.task.content}
+          {props.item.content}
         </Container>
       )}
     </Draggable>
   );
 };
 
-export default Task;
+export default Item;

@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import styled from "@emotion/styled";
 import { Droppable, Draggable } from "react-beautiful-dnd";
-import Task from "./task";
+import Item from "./item";
 
 const Container = styled.div`
   margin: 8px;
@@ -25,8 +25,8 @@ const ItemList = styled.div`
 `;
 
 const InnerList = memo(props => {
-  return props.tasks.map((task, index) => (
-    <Task key={task.id} task={task} index={index} />
+  return props.items.map((item, index) => (
+    <Item key={item.id} item={item} index={index} />
   ));
 });
 
@@ -36,14 +36,14 @@ const Column = props => {
       {provided => (
         <Container {...provided.draggableProps} ref={provided.innerRef}>
           <Title {...provided.dragHandleProps}>{props.column.title}</Title>
-          <Droppable droppableId={props.column.id} type="task">
+          <Droppable droppableId={props.column.id} type="item">
             {provided => (
               <ItemList
                 ref={provided.innerRef}
                 {...provided.droppableProps}
                 // isDragginOver={snapshot.isDraggingOver}
               >
-                <InnerList tasks={props.tasks} />
+                <InnerList items={props.items} />
                 {provided.placeholder}
               </ItemList>
             )}

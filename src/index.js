@@ -13,14 +13,14 @@ const Container = styled.div`
 const areEqual = (prevProps, nextProps) => {
   return (
     nextProps.column === prevProps.column &&
-    nextProps.taskMap === prevProps.taskMap &&
+    nextProps.itemap === prevProps.itemMap &&
     nextProps.index === prevProps.index
   );
 };
 const InnerList = memo(props => {
-  const { column, taskMap, index } = props;
-  const tasks = column.taskIds.map(taskId => taskMap[taskId]);
-  return <Column column={column} tasks={tasks} index={index} />;
+  const { column, itemMap, index } = props;
+  const items = column.itemIds.map(itemId => itemMap[itemId]);
+  return <Column column={column} items={items} index={index} />;
 }, areEqual);
 
 const App = () => {
@@ -62,13 +62,13 @@ const App = () => {
     const finish = data.columns[destination.droppableId];
 
     if (start === finish) {
-      const newTaskIds = Array.from(start.taskIds);
-      newTaskIds.splice(source.index, 1);
-      newTaskIds.splice(destination.index, 0, draggableId);
+      const newitemIds = Array.from(start.itemIds);
+      newitemIds.splice(source.index, 1);
+      newitemIds.splice(destination.index, 0, draggableId);
 
       const newColumn = {
         ...start,
-        taskIds: newTaskIds
+        itemIds: newitemIds
       };
 
       const newState = {
@@ -84,18 +84,18 @@ const App = () => {
     }
 
     // Moving from one list to another.
-    const startTaskIds = Array.from(start.taskIds);
-    startTaskIds.splice(source.index, 1);
+    const startitemIds = Array.from(start.itemIds);
+    startitemIds.splice(source.index, 1);
     const newStart = {
       ...start,
-      taskIds: startTaskIds
+      itemIds: startitemIds
     };
 
-    const finishTaskIds = Array.from(finish.taskIds);
-    finishTaskIds.splice(destination.index, 0, draggableId);
+    const finishitemIds = Array.from(finish.itemIds);
+    finishitemIds.splice(destination.index, 0, draggableId);
     const newFinish = {
       ...finish,
-      taskIds: finishTaskIds
+      itemIds: finishitemIds
     };
 
     const newState = {
@@ -125,7 +125,7 @@ const App = () => {
                 <InnerList
                   key={column.id}
                   column={column}
-                  taskMap={data.tasks}
+                  itemMap={data.items}
                   index={index}
                 />
               );
