@@ -24,8 +24,13 @@ const initialData = {
       itemIds: ["item-6"]
     }
   },
+  rows: {
+    
+  },
   // Facilitate reordering of columns
-  columnOrder: ["column-1", "column-2", "column-3"]
+  columnOrder: ["column-1", "column-2", "column-3"],
+  // Facilitate reordering of rows
+  rowOrder: ["row-1", "row-2"]
 };
 
 export default initialData;
