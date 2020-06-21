@@ -1,4 +1,4 @@
-const initialData = {
+const documentData = {
   items: {
     "item-1": { id: "item-1", content: "Take out the garbage" },
     "item-2": { id: "item-2", content: "Watch my favorite show" },
@@ -25,12 +25,17 @@ const initialData = {
     }
   },
   rows: {
-    
+    "row-1": {
+      id: "row-1",
+      columnIds: ["column-1", "column-2", "column-3"],
+    },
+    "row-2": {
+      id: "row-2",
+      columnIds: []
+    }
   },
-  // Facilitate reordering of columns
-  columnOrder: ["column-1", "column-2", "column-3"],
   // Facilitate reordering of rows
   rowOrder: ["row-1", "row-2"]
 };
 
-export default initialData;
+export default documentData;

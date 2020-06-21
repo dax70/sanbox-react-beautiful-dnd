@@ -2,7 +2,7 @@ import React, { memo, useState } from "react";
 import "normalize.css";
 import styled from "@emotion/styled";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import initialData from "./initial-data";
+import documentData from "./initial-data";
 import Column from "./column";
 
 const Container = styled.div`
@@ -36,7 +36,7 @@ const InnerList = memo(props => {
 }, areEqual);
 
 const App = () => {
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState(documentData);
 
   const onDragStart = start => {};
 
@@ -56,15 +56,69 @@ const App = () => {
       return;
     }
 
-    // Reordering Column
+    // if (type === "column") {
+    //   const newColumnOrder = Array.from(data.columnOrder);
+    //   newColumnOrder.splice(source.index, 1);
+    //   newColumnOrder.splice(destination.index, 0, draggableId);
+
+    //   const newState = {
+    //     ...data,
+    //     columnOrder: newColumnOrder
+    //   };
+
+    //   setData(newState);
+    //   return;
+    // }
+
+    // Column Handling
+    // TODO: check if same order
     if (type === "column") {
-      const newColumnOrder = Array.from(data.columnOrder);
-      newColumnOrder.splice(source.index, 1);
+      const destRow = destination.droppableId;
+      const sourceRow = source.droppableId;
+
+      console.log(`destination id: ${destRow}`);
+      console.log(`source id: ${sourceRow}`);
+
+      if (destRow === sourceRow) {
+        // Reorder column
+        const newColumnOrder = [...data.rows[destRow].columnIds];
+        newColumnOrder.splice(source.index, 1);
+        newColumnOrder.splice(destination.index, 0, draggableId);
+
+        const newState = {
+          ...data,
+          rows: {
+            ...data.rows,
+            [destRow]: {
+              ...destRow,
+              columnIds: newColumnOrder
+            }
+          }
+        };
+
+        setData(newState);
+        return;
+      }
+      // Reparent column to new row
+      const newColumnOrder = [...data.rows[destRow].columnIds];
+      const oldColumnOrder = [...data.rows[sourceRow].columnIds];
+
+      oldColumnOrder.splice(source.index, 1);
       newColumnOrder.splice(destination.index, 0, draggableId);
 
       const newState = {
         ...data,
-        columnOrder: newColumnOrder
+        rows: {
+          ...data.rows,
+          [sourceRow]: {
+            ...sourceRow,
+            columnIds: oldColumnOrder
+          },
+          [destRow]: {
+            ...destRow,
+            columnIds: newColumnOrder
+          }
+        }
       };
 
       setData(newState);
@@ -132,27 +186,27 @@ const App = () => {
       <Layout>
         {/* Render Row */}
         { data.rowOrder.map((rowId, index) => (
+          <Row key={rowId}>
             <Droppable droppableId={rowId} direction="horizontal" type="column">
-            {provided => (
-                <Row key={rowId}>
-                    <Container key={`${rowId}-${index}`} {...provided.droppableProps} ref={provided.innerRef}>
-                        {data.columnOrder.map((columnId, index) => {
-                        const column = data.columns[columnId];
-
-                        return (
-                            <InnerList
-                                key={column.id}
-                                column={column}
-                                itemMap={data.items}
-                                index={index}
-                            />
-                        );
-                        })}
-                        {provided.placeholder}
-                    </Container>
-                </Row>
+              {provided => (
+                <Container key={`${rowId}-${index}`}
+                    {...provided.droppableProps} ref={provided.innerRef}>
+                  {data.rows[rowId].columnIds.map((columnId, index) => {
+                  const column = data.columns[columnId];
+                    return (
+                      <InnerList
+                          key={column.id}
+                          column={column}
+                          itemMap={data.items}
+                          index={index}
+                      />
+                    );
+                  })}
+                  {provided.placeholder}
+                </Container>
             )}
             </Droppable>
+          </Row>
         ))}
       </Layout>
     </DragDropContext>
