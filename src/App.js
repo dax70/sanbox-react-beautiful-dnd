@@ -1,5 +1,4 @@
 import React, { memo, useState } from "react";
-import ReactDOM from "react-dom";
 import "normalize.css";
 import styled from "@emotion/styled";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
@@ -57,6 +56,7 @@ const App = () => {
       return;
     }
 
+    // Reordering Column
     if (type === "column") {
       const newColumnOrder = Array.from(data.columnOrder);
       newColumnOrder.splice(source.index, 1);
@@ -71,6 +71,7 @@ const App = () => {
       return;
     }
 
+    // Moving Items
     const start = data.columns[source.droppableId];
     const finish = data.columns[destination.droppableId];
 
@@ -129,36 +130,30 @@ const App = () => {
       onDragEnd={onDragEnd}
     >
       <Layout>
-        <Droppable droppableId="row-1" direction="horizontal" type="column">
-          {provided => (
-            <Row>
-              <Container {...provided.droppableProps} ref={provided.innerRef}>
-                {data.columnOrder.map((columnId, index) => {
-                  const column = data.columns[columnId];
+        {/* Render Row */}
+        { data.rowOrder.map((rowId, index) => (
+            <Droppable droppableId={rowId} direction="horizontal" type="column">
+            {provided => (
+                <Row key={rowId}>
+                    <Container key={`${rowId}-${index}`} {...provided.droppableProps} ref={provided.innerRef}>
+                        {data.columnOrder.map((columnId, index) => {
+                        const column = data.columns[columnId];
 
-                  return (
-                      <InnerList
-                        key={column.id}
-                        column={column}
-                        itemMap={data.items}
-                        index={index}
-                      />
-                  );
-                })}
-                {provided.placeholder}
-              </Container>
-            </Row>
-          )}
-        </Droppable>
-        <Droppable droppableId="row-2" direction="horizontal" type="column">
-          {provided => (
-            <Row>
-              <Container {...provided.droppableProps} ref={provided.innerRef}>
-                {provided.placeholder}
-              </Container>            
-            </Row>
-          )}
-        </Droppable>
+                        return (
+                            <InnerList
+                                key={column.id}
+                                column={column}
+                                itemMap={data.items}
+                                index={index}
+                            />
+                        );
+                        })}
+                        {provided.placeholder}
+                    </Container>
+                </Row>
+            )}
+            </Droppable>
+        ))}
       </Layout>
     </DragDropContext>
   );
